@@ -1,7 +1,7 @@
 package com.clinicamedica.clinica.model;
 
 public enum TypeUser {
-    PACIENTE,
-    MEDICO,
-    FUNCIONARIO
+    PATIENT,
+    MEDIC,
+    EMPLOYEE,
 }

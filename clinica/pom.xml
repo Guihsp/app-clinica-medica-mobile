@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.clinicamedica</groupId>
-	<artifactId>clinica</artifactId>
+	<artifactId>back-end</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>clinica</name>
 	<description>API para gerenciamento de clínica médica</description>

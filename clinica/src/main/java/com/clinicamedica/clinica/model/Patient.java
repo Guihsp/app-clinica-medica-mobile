@@ -18,7 +18,7 @@ public class Patient {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private String telefone;
+    private String phone;
     private String cpf;
-    private String endereco;
+    private String address;
 }

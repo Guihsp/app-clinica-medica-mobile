@@ -7,6 +7,4 @@ import lombok.Data;
 @AllArgsConstructor
 public class RegisterResponse {
     private String message;
-    private String email;
-    private String typeUser;
 }

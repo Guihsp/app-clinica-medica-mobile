@@ -1,4 +1,4 @@
-package com.clinicamedica.clinica.config;
+package com.clinicamedica.clinica.security;
 
 import com.clinicamedica.clinica.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .httpBasic(); // Pode manter básico
+                .httpBasic();
 
         return http.build();
     }
