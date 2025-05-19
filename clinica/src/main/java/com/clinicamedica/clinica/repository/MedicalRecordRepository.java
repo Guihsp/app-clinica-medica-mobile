@@ -9,4 +9,3 @@ public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Lo
     List<MedicalRecord> findByAppointment_Patient_Id(Long patientId);
 
 }
-// This interface extends JpaRepository, which provides CRUD operations for the MedicalRecord entity.

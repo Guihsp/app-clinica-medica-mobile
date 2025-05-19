@@ -29,8 +29,6 @@ public class DataInitializer implements CommandLineRunner {
 
             userRepository.save(user);
             System.out.println("Funcionário admin criado com sucesso!");
-        } else {
-            System.out.println("ℹ️ Funcionário admin já existe.");
         }
     }
 }

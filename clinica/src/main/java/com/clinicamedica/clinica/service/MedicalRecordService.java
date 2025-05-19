@@ -26,7 +26,6 @@ public class MedicalRecordService {
 
     private final PatientRepository patientRepository;
     public void createMedicalRecord(CreateMedicalRecordRequest request) {
-        // 🔐 Recuperar o médico autenticado
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -41,12 +40,10 @@ public class MedicalRecordService {
         Appointment appointment = appointmentRepository.findById(request.getAppointmentId())
                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada."));
 
-        // ✅ Verificar se o médico da consulta é o médico logado
         if (!appointment.getMedic().getId().equals(medic.getId())) {
             throw new RuntimeException("Este médico não está autorizado a atender esta consulta.");
         }
 
-        // 📦 Criar e associar receitas
         List<Prescription> prescriptions = request.getPrescriptions().stream()
                 .map(p -> Prescription.builder()
                         .medication(p.getMedication())
@@ -55,7 +52,6 @@ public class MedicalRecordService {
                         .build())
                 .collect(Collectors.toList());
 
-        // 📦 Criar e associar exames
         List<ExamRequest> exams = request.getExams().stream()
                 .map(e -> ExamRequest.builder()
                         .examType(e.getExamType())
@@ -63,7 +59,6 @@ public class MedicalRecordService {
                         .build())
                 .collect(Collectors.toList());
 
-        // 📋 Criar prontuário
         MedicalRecord record = MedicalRecord.builder()
                 .appointment(appointment)
                 .diagnosis(request.getDiagnosis())
@@ -73,14 +68,11 @@ public class MedicalRecordService {
                 .exams(exams)
                 .build();
 
-        // Associar bidirecionalmente (opcional, mas bom para persistência em cascata)
         prescriptions.forEach(p -> p.setMedicalRecord(record));
         exams.forEach(e -> e.setMedicalRecord(record));
 
-        // 💾 Salvar prontuário com todos os dados
         medicalRecordRepository.save(record);
 
-        // Atualizar status da consulta
         appointment.setStatus(AppointmentStatus.COMPLETED);
         appointmentRepository.save(appointment);
 
@@ -90,7 +82,6 @@ public class MedicalRecordService {
         MedicalRecord record = medicalRecordRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Prontuário não encontrado."));
 
-        // 🔐 Obter usuário logado
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
@@ -109,7 +100,6 @@ public class MedicalRecordService {
             throw new RuntimeException("Acesso negado. Você não tem permissão para visualizar este prontuário.");
         }
 
-        // ✅ Se autorizado, retorna os dados
         return MedicalRecordResponse.builder()
                 .id(record.getId())
                 .diagnosis(record.getDiagnosis())
@@ -141,7 +131,7 @@ public class MedicalRecordService {
         TypeUser type = user.getTypeUser();
 
         if (type == TypeUser.PATIENT) {
-            // Paciente só pode acessar seus próprios registros
+
             Patient patient = patientRepository.findByUser(user)
                     .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
@@ -150,7 +140,6 @@ public class MedicalRecordService {
             }
         }
 
-        // Funcionário pode consultar qualquer paciente
 
         List<MedicalRecord> records = medicalRecordRepository.findByAppointment_Patient_Id(patientId);
 
